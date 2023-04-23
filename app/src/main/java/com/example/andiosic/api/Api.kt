@@ -12,7 +12,7 @@ import java.io.IOException
 
 object Api {
     var client = loadClient();
-    var baseUrl = "${ConfigManager.serverAddress.toString()}/api"; private set
+    val baseUrl get() = "${ConfigManager.serverAddress.toString()}/api"
 
     private fun loadClient(): OkHttpClient {
         return OkHttpClient().newBuilder().addInterceptor(Interceptor { chain ->

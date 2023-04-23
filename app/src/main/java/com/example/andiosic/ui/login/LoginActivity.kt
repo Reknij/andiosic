@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.*
@@ -30,6 +31,9 @@ class LoginActivity : AppCompatActivity() {
         setContent {
             val scope = rememberCoroutineScope()
             var openDialog = remember {mutableStateOf(false)}
+            var dialogText by remember {
+                mutableStateOf("null")
+            }
             val activity = this
             val snackbarHostState = remember { SnackbarHostState() }
             val isSuccess = remember {
@@ -85,11 +89,13 @@ class LoginActivity : AppCompatActivity() {
                                                 activity.finish()
                                             }
                                             else {
+                                                dialogText = "Username or password incorrect. Please retry.."
                                                 openDialog.value = true
                                             }
                                         }
                                         catch (e: Exception) {
                                             Log.e("LoginActivity", e.message.toString())
+                                            dialogText = "When login account, an error occurred. Please ensure server address start with `http://` or `https://`"
                                             openDialog.value = true
                                         }
                                     }
@@ -107,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
                                             Text("Can't login!")
                                         },
                                         text = {
-                                            Text("When login account, an error occurred.")
+                                            Text(dialogText)
                                         },
                                         confirmButton = {
                                             TextButton(onClick = {
@@ -122,6 +128,10 @@ class LoginActivity : AppCompatActivity() {
                     }
                 },
             )
+
+            BackHandler() {
+                finishAffinity()
+            }
         }
     }
 
