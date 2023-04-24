@@ -5,6 +5,8 @@ import android.graphics.Bitmap
 import android.support.v4.media.session.MediaControllerCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.example.andiosic.R
 import com.example.andiosic.musicservice.callbacks.MusicNotificationListener
 import com.example.andiosic.util.CHANNEL_ID
@@ -19,6 +21,7 @@ class MusicNotificationManager(
 ) {
 
     private val mediaController = MediaControllerCompat(musicService, sessionToken)
+    private val cacheBitmap = HashMap<String, Bitmap>()
 
     private val notificationManager = PlayerNotificationManager.Builder(
         musicService, NOTIFICATION_ID, CHANNEL_ID
@@ -54,11 +57,23 @@ class MusicNotificationManager(
             player: Player,
             callback: PlayerNotificationManager.BitmapCallback
         ): Bitmap? {
-            musicService.loadImageBitmap(
-                if (MediaDepository.currentMedia.value?.getCoverUrl() != null) mediaController.metadata.description.iconUri.toString()
-                else R.drawable.default_cover) {
+            if (cacheBitmap.count() > 20) {
+                cacheBitmap.clear() // clear cache if more than 20
+            }
+            val coverUrl = mediaController.metadata.description.iconUri // instead MediaDepository.currentMedia.value?.getCoverUrl()
+            val coverUrlString = coverUrl.toString()
+
+            cacheBitmap[coverUrlString]?.let {
+                Log.i("MusicNotificationManager", "use cache.")
+                return it
+            }
+            musicService.loadImageBitmap(if (coverUrl != null) coverUrlString else R.drawable.default_cover) {
+                Log.i("MusicNotificationManager", "load bitmap.")
+
+                cacheBitmap[coverUrlString] = it
                 callback.onBitmap(it)
             }
+
             return null
         }
     }

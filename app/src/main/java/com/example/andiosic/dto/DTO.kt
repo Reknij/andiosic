@@ -54,7 +54,7 @@ class MediaInfo {
             .putString(MediaMetadataCompat.METADATA_KEY_ALBUM, album)
             .putString(MediaMetadataCompat.METADATA_KEY_GENRE, genre)
         if (cover != null) {
-            meta.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, cover)
+            meta.putString(MediaMetadataCompat.METADATA_KEY_DISPLAY_ICON_URI, getCoverUrl())
         }
         try {
             val yearNum = year.toLong()
