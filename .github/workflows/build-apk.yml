@@ -16,9 +16,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
-      - name: Set keystore file
-        run: echo ${{ secrets.KEYSTORE }} | base64 --decode > ANDIOSIC_KEY.jks
       
       # Set Current Date As Env Variable
       - name: Set current date as env variable
