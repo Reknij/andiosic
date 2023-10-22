@@ -13,11 +13,11 @@ jobs:
     steps:
     - uses: sparkfabrik/android-build-action@v1.5.0
       with:
-        project-path: .
+        project-path: /
         output-path: diosic-debug-latest.apk
         fastlane-env: "debug"
     - uses: sparkfabrik/android-build-action@v1.5.0
       with:
-        project-path: .
+        project-path: /
         output-path: diosic-reelase-latest.apk
         fastlane-env: "release"
